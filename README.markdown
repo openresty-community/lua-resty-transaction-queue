@@ -7,7 +7,23 @@ Table of Contents
 =================
 
 * [Name](#name)
+* [Status](#status)
 * [Description](#description)
+* [Synopsis](#synopsis)
+* [Usage](#usage)
+* [配置 Transation Queue](#配置 Transation Queue)
+    * [设置包路径](#设置包路径)
+    * [设置初始化方法](#设置初始化方法)
+    * [设置队列长度](#设置队列长度)
+    * [设置异步请求优先级](#设置异步请求优先级)
+    * [设置异步请求回调模块](#设置异步请求回调模块)
+    * [设置异步请求队列处理方法](#设置异步请求队列处理犯法)
+* [开发异步请求回调模块](#开发异步请求回调模块)
+* [Limitations](#limitations)
+* [TODO](#todo)
+* [Author](#author)
+* [Copyright and License](#copyright-and-license)
+* [See Also](#see-also)
 
 Status
 ======
@@ -53,54 +69,54 @@ Transaction Queue 初始化时会在每个 worker 下注册一个定时器。当
 设置包路径
 ----------
 
-`syntax:  lua_package_path "/path/to/lua-resty-tm/lib/?.lua;;";
+`syntax:  lua_package_path "/path/to/lua-resty-tm/lib/?.lua;;";`
 
-`context:  http
+`context:  http`
 
 设置初始化方法
 --------------
 
-`syntax:  init_worker_by_lua_file transaction_queue_init.lua;
+`syntax:  init_worker_by_lua_file transaction_queue_init.lua;`
 
-`context: http
+`context: http`
 
-`phase: starting-worker
+`phase: starting-worker`
 
 设置队列长度
 ------------
 
-`syntax: set_by_lua_file $queue_size transaction_queue_set.lua 10;
+`syntax: set_by_lua_file $queue_size transaction_queue_set.lua 10;`
 
-`context: server, server if, location, location if
+`context: server, server if, location, location if`
 
-`phase: rewrite
+`phase: rewrite`
 
 设置异步请求优先级
 ------------------
 
-`syntax:  set $queue_priority 9;
+`syntax:  set $queue_priority 9;`
 
-`context: location, location if
+`context: location, location if`
 
-`phase: rewrite
+`phase: rewrite`
 
 设置异步请求回调模块
 --------------------
 
-`syntax:  set $queue_handler "xxx";
+`syntax:  set $queue_handler "xxx";`
 
-`context: location, location if
+`context: location, location if`
 
-`phase: rewrite
+`phase: rewrite`
 
 设置异步请求队列处理方法
 ------------------------
 
-`syntax: content_by_lua_file transaction_queue_handle.lua;
+`syntax: content_by_lua_file transaction_queue_handle.lua;`
 
-`context: location, location if
+`context: location, location if`
 
-`phase: content
+`phase: content`
 
 开发异步请求回调模块
 ====================
