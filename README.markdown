@@ -11,7 +11,7 @@ Table of Contents
 * [Description](#description)
 * [Synopsis](#synopsis)
 * [Usage](#usage)
-* [配置 Transation Queue](#配置 Transation Queue)
+* [配置 Transation Queue](##配置-transation-queue)
     * [设置包路径](#设置包路径)
     * [设置初始化方法](#设置初始化方法)
     * [设置队列长度](#设置队列长度)
