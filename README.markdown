@@ -11,14 +11,14 @@ Table of Contents
 * [Description](#description)
 * [Synopsis](#synopsis)
 * [Usage](#usage)
-* [配置 Transation Queue](##配置-transation-queue)
-    * [设置包路径](#设置包路径)
-    * [设置初始化方法](#设置初始化方法)
-    * [设置队列长度](#设置队列长度)
-    * [设置异步请求优先级](#设置异步请求优先级)
-    * [设置异步请求回调模块](#设置异步请求回调模块)
-    * [设置异步请求队列处理方法](#设置异步请求队列处理犯法)
-* [开发异步请求回调模块](#开发异步请求回调模块)
+* [Setting Transation Queue](##setting-transation-queue)
+    * [Setting Package Path](#Setting-Package-Path)
+    * [Setting Init Method](#Setting-Init-Method)
+    * [Setting Queue Size](#Setting-Queue-Size)
+    * [Setting Request Priority](#Setting-Request-Priority)
+    * [Setting Request Callback](#Setting-Request-Callback)
+    * [Setting Request Handle](#Setting-Request-Handle)
+* [Developing Request Callback](#Developing-Request-Callback)
 * [Limitations](#limitations)
 * [TODO](#todo)
 * [Author](#author)
@@ -35,13 +35,13 @@ This Lua library  is a Transaction Queue for the ngx_lua nginx module:
 
 https://github.com/openresty/lua-nginx-module/#readme
 
-基于定时器的异步请求队列实现，worker 内共享，允许设置多个不同优先级别的异步队列及其队列长度，主要用于 HTTP 请求异步处理场景。Nginx接收到HTTP请求后可以先应答，后面再将请求异步提交到 Transaction Queue。
+This module is a priority message queue for request processing.  When Nginx receives a request, the request can be assigned a priority (1 ~ 10), and it will be dispatched to the message queue with the priority correspondingly.  Each Nginx worker has a timer, and the timer will fetch the request from the priority message queue regularly and call the user-defined callback function to process the request. Low priority requests are processed only after high priority requests have been processed.
 
 Synopsis
 ========
 
 ```lua
-    lua_package_path "/path/to/lua-resty-tm/lib/?.lua;;";
+    lua_package_path "/path/to/lua-resty-transaction-queue/lib/?.lua;;";
     init_worker_by_lua_file transaction_queue_init.lua;
 
     server {
@@ -59,21 +59,20 @@ Synopsis
 
 Usage
 =====
-Transaction Queue 初始化时会在每个 worker 下注册一个定时器。当 Nginx 收到用户请求后，会调用 Transaction Queue 的默认请求处理方法，该方法会把请求放入到  Transaction Queue 中，并直接返回结果给用户。然后定时器会定期从  Transaction Queue 中获取请求并调用该请求的回调方法。
+Transaction Queue will register a timer during initialization for each Nginx worker. When Nginx receives a requests, the request will be dispatched to the transaction queue and respond user immediately. After that, the request will be processed asynchronously by the timer with the user-defined callback function. 
+User should configure the callback function and the priority for each request, and user can also configure the transaction queue,  such as queue size, etc.
 
-用户需按照文档开发异步请求回调模块，并配置 Transaction Queue。
-
-配置 Transation Queue
+Setting Transation Queue
 =====================
 
-设置包路径
+Setting Package Path
 ----------
 
 `syntax:  lua_package_path "/path/to/lua-resty-tm/lib/?.lua;;";`
 
 `context:  http`
 
-设置初始化方法
+Setting Init Method
 --------------
 
 `syntax:  init_worker_by_lua_file transaction_queue_init.lua;`
@@ -82,7 +81,7 @@ Transaction Queue 初始化时会在每个 worker 下注册一个定时器。当
 
 `phase: starting-worker`
 
-设置队列长度
+Setting Queue Size
 ------------
 
 `syntax: set_by_lua_file $queue_size transaction_queue_set.lua 10;`
@@ -91,8 +90,8 @@ Transaction Queue 初始化时会在每个 worker 下注册一个定时器。当
 
 `phase: rewrite`
 
-设置异步请求优先级
-------------------
+Setting Request Priority
+------------------------
 
 `syntax:  set $queue_priority 9;`
 
@@ -100,8 +99,8 @@ Transaction Queue 初始化时会在每个 worker 下注册一个定时器。当
 
 `phase: rewrite`
 
-设置异步请求回调模块
---------------------
+Setting Request Callback
+------------------------
 
 `syntax:  set $queue_handler "xxx";`
 
@@ -109,8 +108,8 @@ Transaction Queue 初始化时会在每个 worker 下注册一个定时器。当
 
 `phase: rewrite`
 
-设置异步请求队列处理方法
-------------------------
+Setting Request Handle
+----------------------
 
 `syntax: content_by_lua_file transaction_queue_handle.lua;`
 
@@ -118,24 +117,24 @@ Transaction Queue 初始化时会在每个 worker 下注册一个定时器。当
 
 `phase: content`
 
-开发异步请求回调模块
-====================
+Developing Request Callback
+========================
 
-该模块需要返回一个 table，其中需包含一个 exeute 方法，该方法原型如下：
+The Callback Module need return a table, which mush include a execute method. 
 
+The define of execute method is:
 ```lua
   function _M.execute(task)
   end
 
-  execute 方法接收一个 table 参数，包含两个 kv 对，
+  The type of parameter task is table, which include two kv pairs, as follows:
   {
     uri：ngx.var.uri,
     args：ngx.req.get_uri_args(),
   }
 ```
 
-示例
-
+The Callback Module Example:
 ```lua
   local _M = { VERSION = '0.0.1' }
   local log = ngx.log
