@@ -134,9 +134,9 @@ Setting Request Handle
 Developing Request Callback
 ========================
 
-The Callback Module need return a table, which mush include a execute method. 
+The Callback Module need return a table, which mush include an execute method. 
 
-The define of execute method is:
+The definition of execute method is:
 ```lua
   function _M.execute(task)
   end
