@@ -11,14 +11,14 @@ Table of Contents
 * [Description](#description)
 * [Synopsis](#synopsis)
 * [Usage](#usage)
-* [Setting Transation Queue](##setting-transation-queue)
-    * [Setting Package Path](#Setting-Package-Path)
-    * [Setting Init Method](#Setting-Init-Method)
-    * [Setting Queue Size](#Setting-Queue-Size)
-    * [Setting Request Priority](#Setting-Request-Priority)
-    * [Setting Request Callback](#Setting-Request-Callback)
-    * [Setting Request Handle](#Setting-Request-Handle)
-* [Developing Request Callback](#Developing-Request-Callback)
+* [Setting Transation Queue](#setting-transation-queue)
+    * [Setting Package Path](#setting-package-path)
+    * [Setting Init Method](#setting-init-method)
+    * [Setting Queue Size](#setting-queue-size)
+    * [Setting Request Priority](#setting-request-priority)
+    * [Setting Request Callback](#setting-request-callback)
+    * [Setting Request Handle](#setting-request-handle)
+* [Developing Request Callback](#developing-request-callback)
 * [Limitations](#limitations)
 * [TODO](#todo)
 * [Author](#author)
@@ -62,6 +62,8 @@ Usage
 Transaction Queue will register a timer during initialization for each Nginx worker. When Nginx receives a requests, the request will be dispatched to the transaction queue and respond user immediately. After that, the request will be processed asynchronously by the timer with the user-defined callback function. 
 User should configure the callback function and the priority for each request, and user can also configure the transaction queue,  such as queue size, etc.
 
+[Back to TOC](#table-of-contents)
+
 Setting Transation Queue
 =====================
 
@@ -72,6 +74,8 @@ Setting Package Path
 
 `context:  http`
 
+[Back to TOC](#table-of-contents)
+
 Setting Init Method
 --------------
 
@@ -80,6 +84,8 @@ Setting Init Method
 `context: http`
 
 `phase: starting-worker`
+
+[Back to TOC](#table-of-contents)
 
 Setting Queue Size
 ------------
@@ -90,6 +96,8 @@ Setting Queue Size
 
 `phase: rewrite`
 
+[Back to TOC](#table-of-contents)
+
 Setting Request Priority
 ------------------------
 
@@ -98,6 +106,8 @@ Setting Request Priority
 `context: location, location if`
 
 `phase: rewrite`
+
+[Back to TOC](#table-of-contents)
 
 Setting Request Callback
 ------------------------
@@ -108,6 +118,8 @@ Setting Request Callback
 
 `phase: rewrite`
 
+[Back to TOC](#table-of-contents)
+
 Setting Request Handle
 ----------------------
 
@@ -116,6 +128,8 @@ Setting Request Handle
 `context: location, location if`
 
 `phase: content`
+
+[Back to TOC](#table-of-contents)
 
 Developing Request Callback
 ========================
@@ -149,6 +163,8 @@ The Callback Module Example:
 
   return _M
 ```
+
+[Back to TOC](#table-of-contents)
 
 Limitations
 ===========
