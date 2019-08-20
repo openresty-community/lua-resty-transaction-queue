@@ -2,7 +2,7 @@ local max_priority = 10
 local min_priority = 1
 local default_queue_size = 10
 local _M = { 
-  _VERSION = '0.0.1',
+  _VERSION = '1.0',
   queue_size = default_queue_size,
   queue = {},
 }
